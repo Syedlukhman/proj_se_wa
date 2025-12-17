@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ listing.title }} - BookExchange{% endblock %}
+
+{% block content %}
+<section class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-2">{{ listing.title }}</h2>
+    <p class="mb-1"><span class="font-medium">Author:</span> {{ listing.author }}</p>
+    {% if listing.genre %}<p class="mb-1"><span class="font-medium">Genre:</span> {{ listing.genre }}</p>{% endif %}
+    <p class="mb-1"><span class="font-medium">Condition:</span> {{ listing.condition or 'Unknown' }}</p>
+    <p class="mb-1"><span class="font-medium">Posted by:</span> {{ listing.owner.username }}</p>
+    <p class="font-medium mt-4">Description:</p>
+    <p class="mt-1 whitespace-pre-line">{{ listing.description or 'No description provided.' }}</p>
+
+    {% if current_user.is_authenticated %}
+        {% if listing.owner.id != current_user.id %}
+            <h3 class="text-xl font-semibold mt-6 mb-2">Conversation with {{ listing.owner.username }}</h3>
+            <div class="messages-container space-y-2 mb-4 max-h-80 overflow-y-auto">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="p-3 rounded {{ 'bg-blue-50' if msg.sender_id == current_user.id else 'bg-gray-50' }}">
+                            <p class="text-sm text-gray-600 mb-1"><span class="font-medium">{{ msg.sender.username }}</span> on {{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }}</p>
+                            <p>{{ msg.content }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-600">No messages yet. Start the conversation below.</p>
+                {% endif %}
+            </div>
+            <form action="{{ url_for('listing_detail', listing_id=listing.id) }}" method="post" class="flex flex-col space-y-2">
+                <textarea name="content" rows="3" placeholder="Type your message..." required class="p-2 border border-gray-300 rounded"></textarea>
+                <button type="submit" class="self-start bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Send</button>
+            </form>
+        {% else %}
+            <p class="text-gray-600 mt-4">You are the owner of this listing. Other users can contact you here.</p>
+        {% endif %}
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Log in</a> to contact the seller.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages - BookExchange{% endblock %}
+
+{% block content %}
+<section class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Your Conversations</h2>
+    {% if conversations %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {% for key, msg in conversations.items() %}
+                {% set listing_id, partner_id = key %}
+                <div class="bg-white p-4 rounded-lg shadow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-1">Listing: {{ msg.listing.title }}</h3>
+                        <p class="mb-1"><span class="font-medium">With:</span> {{ msg.sender.username if msg.sender_id != current_user.id else msg.receiver.username }}</p>
+                        <p class="mb-3"><span class="font-medium">Last message:</span> {{ msg.content[:100] }}{% if msg.content|length > 100 %}...{% endif %}</p>
+                    </div>
+                    <a href="{{ url_for('listing_detail', listing_id=listing_id) }}" class="mt-auto inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded text-center">Open Conversation</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-600">You have no conversations yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

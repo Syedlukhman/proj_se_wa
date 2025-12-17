@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Online Book Exchange{% endblock %}</title>
+    <!-- Include Tailwind CSS via CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom stylesheet for legacy styling and flash messages -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <a class="nav-brand" href="{{ url_for('index') }}">BookExchange</a>
+                <a href="{{ url_for('listings') }}">Browse Listings</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('create_listing') }}">Add Listing</a>
+                    <a href="{{ url_for('my_listings') }}">My Listings</a>
+                    <a href="{{ url_for('messages_overview') }}">Messages</a>
+                {% endif %}
+            </div>
+            <div class="nav-right">
+                {% if current_user.is_authenticated %}
+                    <span class="user-info">Hello, {{ current_user.username }}!</span>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <section class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </section>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; {{ current_year if current_year else '' }} BookExchange. All rights reserved.</p>
+    </footer>
+    <!-- Base scripts -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- React and ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Listings component script -->
+    <script src="{{ url_for('static', filename='js/book_listings.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Listing - BookExchange{% endblock %}
+
+{% block content %}
+<section class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Add a Book Listing</h2>
+    <form action="{{ url_for('create_listing') }}" method="post" class="flex flex-col">
+        <label for="title" class="mt-2 font-medium">Title</label>
+        <input type="text" id="title" name="title" required class="p-2 border border-gray-300 rounded" />
+
+        <label for="author" class="mt-4 font-medium">Author</label>
+        <input type="text" id="author" name="author" required class="p-2 border border-gray-300 rounded" />
+
+        <label for="genre" class="mt-4 font-medium">Genre</label>
+        <input type="text" id="genre" name="genre" placeholder="e.g. Fiction, Science" class="p-2 border border-gray-300 rounded" />
+
+        <label for="condition" class="mt-4 font-medium">Condition</label>
+        <select id="condition" name="condition" class="p-2 border border-gray-300 rounded">
+            <option value="">Select...</option>
+            <option value="New">New</option>
+            <option value="Like New">Like New</option>
+            <option value="Very Good">Very Good</option>
+            <option value="Good">Good</option>
+            <option value="Acceptable">Acceptable</option>
+        </select>
+
+        <label for="description" class="mt-4 font-medium">Description</label>
+        <textarea id="description" name="description" rows="5" placeholder="Provide a brief description, notes, or exchange terms" class="p-2 border border-gray-300 rounded"></textarea>
+
+        <button type="submit" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Create Listing</button>
+    </form>
+</section>
+{% endblock %}

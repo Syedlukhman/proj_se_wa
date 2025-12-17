@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}My Listings - BookExchange{% endblock %}
+
+{% block content %}
+<section class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-4">My Listings</h2>
+    {% if listings %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {% for listing in listings %}
+                <div class="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">{{ listing.title }}</h3>
+                        <p class="mb-1"><span class="font-medium">Author:</span> {{ listing.author }}</p>
+                        {% if listing.genre %}<p class="mb-1"><span class="font-medium">Genre:</span> {{ listing.genre }}</p>{% endif %}
+                        <p class="mb-1"><span class="font-medium">Condition:</span> {{ listing.condition or 'Unknown' }}</p>
+                        <p class="mb-1"><span class="font-medium">Posted on:</span> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
+                    </div>
+                    <a href="{{ url_for('listing_detail', listing_id=listing.id) }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded text-center">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-600">You haven't posted any listings yet. <a href="{{ url_for('create_listing') }}" class="text-blue-600 hover:underline">Create one now</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

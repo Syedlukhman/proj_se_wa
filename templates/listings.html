@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Listings - BookExchange{% endblock %}
+
+{% block content %}
+<section class="bg-white p-6 rounded-lg shadow mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Browse Books</h2>
+    <form method="get" action="{{ url_for('listings') }}" class="flex flex-wrap gap-3">
+        <input type="text" name="q" placeholder="Search by title, author or genre" value="{{ search_query }}" class="flex-1 min-w-[200px] p-2 border border-gray-300 rounded" />
+        <select name="genre" class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded">
+            <option value="">All Genres</option>
+            {% for genre in genres %}
+                <option value="{{ genre }}" {% if genre == genre_filter %}selected{% endif %}>{{ genre }}</option>
+            {% endfor %}
+        </select>
+        <select name="condition" class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded">
+            <option value="">Any Condition</option>
+            {% for cond in conditions %}
+                <option value="{{ cond }}" {% if cond == condition_filter %}selected{% endif %}>{{ cond }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Search</button>
+    </form>
+</section>
+
+<section class="results-section">
+    {% if listings %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {% for listing in listings %}
+                <div class="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">{{ listing.title }}</h3>
+                        <p class="mb-1"><span class="font-medium">Author:</span> {{ listing.author }}</p>
+                        {% if listing.genre %}<p class="mb-1"><span class="font-medium">Genre:</span> {{ listing.genre }}</p>{% endif %}
+                        <p class="mb-1"><span class="font-medium">Condition:</span> {{ listing.condition or 'Unknown' }}</p>
+                        <p class="mb-1"><span class="font-medium">Posted by:</span> {{ listing.owner.username }}</p>
+                    </div>
+                    <a href="{{ url_for('listing_detail', listing_id=listing.id) }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded text-center">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-600">No listings match your search.</p>
+    {% endif %}
+</section>
+{% endblock %}

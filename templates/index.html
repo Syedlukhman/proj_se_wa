@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Online Book Exchange{% endblock %}
+
+{% block content %}
+<!-- Modern hero section with illustration -->
+<section class="bg-white rounded-lg shadow p-8 mb-8 flex flex-col items-center text-center space-y-4">
+    <h1 class="text-4xl font-bold">Welcome to BookExchange</h1>
+    <p class="text-lg">Give away, trade or sell your second‑hand books in your local area.</p>
+    <p class="text-lg">Join our community to make books more accessible and sustainable.</p>
+    <!-- Hero illustration -->
+    <img src="{{ url_for('static', filename='img/book_exchange_illustration.png') }}" alt="People exchanging books" class="max-w-md mx-auto rounded-md shadow" />
+    {% if not current_user.is_authenticated %}
+        <div class="flex flex-col sm:flex-row gap-4 mt-4">
+            <a href="{{ url_for('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Get Started</a>
+            <a href="{{ url_for('login') }}" class="bg-gray-100 hover:bg-gray-200 text-blue-600 py-2 px-4 rounded">Log In</a>
+        </div>
+    {% endif %}
+</section>
+
+<!-- Dynamic recent listings powered by React -->
+<section class="recent-listings">
+    <h2 class="text-2xl font-semibold mb-4">Recent Listings</h2>
+    {% if listings %}
+        <!-- Pass listings data to React via JSON -->
+        <script>
+            // Convert the listings list to JSON for the React app
+            var listingsData = {{ listings|tojson }};
+        </script>
+        <!-- Root element for the React app -->
+        <div id="listing-root"></div>
+    {% else %}
+        <p class="text-gray-600">No listings yet. Be the first to <a href="{{ url_for('create_listing') }}" class="text-blue-600 hover:underline">add a book</a>!</p>
+    {% endif %}
+</section>
+{% endblock %}
